@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-
 interface BookingDraft {
   serviceId: string | null
   date: string

@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useBookingDraftStore } from '../../stores/bookingDraftStore'
 import { z } from 'zod'
 import {
   useGetServiceByIdQuery,
@@ -16,7 +17,6 @@ import { ErrorState } from '../../components/ErrorState'
 import { TimeSlotSelector } from '../../components/TimeSlotSelector'
 import { BookingSummary } from '../../components/BookingSummary'
 import type { ApiError, TimeSlot } from '../../types'
-import { useBookingDraftStore } from '../../stores/bookingDraftStore'
 
 const bookingSchema = z.object({
   date: z.string().min(1, 'Please select a date'),
