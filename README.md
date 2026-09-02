@@ -1,32 +1,137 @@
-# React + TypeScript + Vite
+# Demo Marketplace
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A frontend-only Customer Service Booking System built as a technical assignment.
 
-Currently, two official plugins are available:
+**Demo:** `<<< ADD DEMO VIDEO LINK >>>`
+**Repository:** `https://github.com/Sujan299/Customer-Service-Booking-System`
+**Author:** `Sujan Chaudhary`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Project Overview
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Demo Marketplace lets customers browse home services, select available time slots, and confirm bookings. The application is entirely frontend-based, backed by a Promise-based mock API that simulates realistic HTTP behavior including latency, validation, conflict errors, and server errors.
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Features
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+- Browse and search services by name, category, or provider
+- Filter by category
+- View full service details and availability
+- Book a service with date, time slot, address, and notes
+- Real-time booking validation (React Hook Form + Zod)
+- Server-side slot conflict simulation (409 response)
+- Booking confirmation page
+- My Bookings list and detail view
+- Loading, error, and empty states throughout
+
+---
+
+## Tech Stack
+
+| Tool | Purpose |
+|---|---|
+| React 18 + TypeScript | UI and type safety |
+| Vite | Build tool |
+| React Router v6 | Client-side routing |
+| Redux Toolkit + RTK Query | Global UI state (notifications) and server state (caching, invalidation, mutations) |
+| Zustand | Booking draft persistence across navigation |
+| React Hook Form + Zod | Form state and validation |
+| Tailwind CSS v4 | Styling |
+| Vitest + React Testing Library | Testing |
+
+---
+
+## Architecture
+
+```
+UI Components
+    ↓
+Feature Pages (services/, booking/, bookings/)
+    ↓                             ↓
+RTK Query hooks             Zustand (booking draft)
+(store/apiSlice.ts)         Redux Toolkit (notifications)
+    ↓
+API Client (client.ts — normalizes errors)
+    ↓
+Mock API (mockApi.ts — stateful, validates, delays)
+    ↓
+Mock Data (data.ts)
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+See [`docs/architecture.md`](docs/architecture.md) for full detail.
+
+---
+
+## Project Structure
+
+```
+src/
+├── api/
+│   ├── client.ts              
+│   ├── services/
+│   │   ├── servicesApi.ts     
+│   │   └── bookingsApi.ts   
+│   └── mock/
+│       ├── mockApi.ts        
+│       ├── data.ts           
+│       └── config.ts         
+├── features/
+│   ├── services/            
+│   ├── booking/              
+│   └── bookings/              
+├── components/             
+├── store/                     
+├── stores/                   
+├── types/
+│   └── index.ts             
+└── test/
+    └── setup.ts
+```
+
+---
+
+## Getting Started
+
+```bash
+npm install
+npm run dev
+```
+
+See [`docs/setup.md`](docs/setup.md) for full setup instructions.
+
+---
+
+## Testing
+
+```bash
+npm run test
+```
+
+Tests cover service listing, service details, booking validation, successful booking, and 409 slot conflict handling.
+
+---
+
+## Mock API
+
+The app uses a Promise-based mock API (`src/api/mock/mockApi.ts`) instead of a real backend. It:
+
+- Simulates network latency (600ms by default)
+- Maintains in-memory state (bookings persist within the session)
+- Validates requests and returns structured errors
+- Enforces business rules (slot conflicts, 404s, etc.)
+
+Developer flags in `src/api/mock/config.ts`:
+
+```ts
+mockConfig.simulateServerError = true  
+mockConfig.simulateSlotConflict = true  
+mockConfig.networkDelay = 0             
+```
+
+---
+
+## Technical Decisions
+
+See [`docs/decisions.md`](docs/decisions.md) for detailed rationale.
