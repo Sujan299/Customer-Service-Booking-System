@@ -1,4 +1,4 @@
-import {SERVICE_CATEGORIES} from '../lib/constants'
+import { SERVICE_CATEGORIES } from '../lib/constants'
 
 const categories = [...SERVICE_CATEGORIES]
 

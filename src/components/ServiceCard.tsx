@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import type {Service} from '../types'
+import type { Service } from '../types'
 
 function formatPrice(price: number, currency: string) {
   return `${currency} ${price.toLocaleString()}`
