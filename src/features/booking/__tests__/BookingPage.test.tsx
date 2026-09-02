@@ -8,12 +8,22 @@ import notificationsReducer from '../../../store/notificationsSlice'
 import { apiSlice } from '../../../store/apiSlice'
 import { useBookingDraftStore } from '../../../stores/bookingDraftStore'
 import { BookingPage } from '../BookingPage'
-import * as servicesApiModule from '../../../api/services/servicesApi'
-import * as bookingsApiModule from '../../../api/services/bookingsApi'
+import { client } from '../../../api/client'
 import type { Service, Availability, Booking } from '../../../types'
 
-vi.mock('../../../api/services/servicesApi')
-vi.mock('../../../api/services/bookingsApi')
+vi.mock('../../../api/client', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../../api/client')>()
+  return {
+    ...actual,
+    client: {
+      ...actual.client,
+      getServiceById: vi.fn(),
+      getAvailability: vi.fn(),
+      getAddresses: vi.fn(),
+      createBooking: vi.fn(),
+    },
+  }
+})
 
 const mockAddresses = [
   {
@@ -101,9 +111,9 @@ describe('BookingPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     useBookingDraftStore.getState().clearDraft()
-    vi.mocked(servicesApiModule.servicesApi.getServiceById).mockResolvedValue(mockService)
-    vi.mocked(servicesApiModule.servicesApi.getAvailability).mockResolvedValue(mockAvailability)
-    vi.mocked(bookingsApiModule.bookingsApi.getAddresses).mockResolvedValue(mockAddresses)
+    vi.mocked(client.getServiceById).mockResolvedValue(mockService)
+    vi.mocked(client.getAvailability).mockResolvedValue(mockAvailability)
+    vi.mocked(client.getAddresses).mockResolvedValue(mockAddresses)
   })
 
   it('prevents submission when required fields are missing', async () => {
@@ -119,11 +129,11 @@ describe('BookingPage', () => {
       expect(screen.getByText('Please select an address')).toBeInTheDocument()
     })
 
-    expect(bookingsApiModule.bookingsApi.createBooking).not.toHaveBeenCalled()
+    expect(client.createBooking).not.toHaveBeenCalled()
   })
 
   it('submits successfully and navigates to confirmation', async () => {
-    vi.mocked(bookingsApiModule.bookingsApi.createBooking).mockResolvedValue(mockBooking)
+    vi.mocked(client.createBooking).mockResolvedValue(mockBooking)
 
     renderWithProviders()
 
@@ -143,13 +153,13 @@ describe('BookingPage', () => {
   })
 
   it('dispatches a conflict notification on 409 and refreshes availability', async () => {
-    vi.mocked(bookingsApiModule.bookingsApi.createBooking).mockRejectedValue({
+    vi.mocked(client.createBooking).mockRejectedValue({
       status: 409,
       code: 'SLOT_UNAVAILABLE',
       message: 'The selected time slot is no longer available.',
     })
 
-    const { store } = renderWithProviders()
+    renderWithProviders()
 
     await waitFor(() => screen.getByText('09:00 AM'))
 
@@ -159,8 +169,8 @@ describe('BookingPage', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /confirm booking/i }))
 
-   
-
-    expect(servicesApiModule.servicesApi.getAvailability).toHaveBeenCalledTimes(2)
+    await waitFor(() => {
+      expect(client.getAvailability).toHaveBeenCalledTimes(2)
+    })
   })
 })

@@ -7,10 +7,19 @@ import { MemoryRouter } from 'react-router-dom'
 import { ServiceListPage } from '../ServiceListPage'
 import { apiSlice } from '../../../store/apiSlice'
 import notificationsReducer from '../../../store/notificationsSlice'
-import * as servicesApiModule from '../../../api/services/servicesApi'
+import { client } from '../../../api/client'
 import type { Service } from '../../../types'
 
-vi.mock('../../../api/services/servicesApi')
+vi.mock('../../../api/client', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../../api/client')>()
+  return {
+    ...actual,
+    client: {
+      ...actual.client,
+      getServices: vi.fn(),
+    },
+  }
+})
 
 const mockServices: Service[] = [
   {
@@ -67,7 +76,7 @@ describe('ServiceListPage', () => {
   })
 
   it('renders a list of services on successful load', async () => {
-    vi.mocked(servicesApiModule.servicesApi.getServices).mockResolvedValue(mockServices)
+    vi.mocked(client.getServices).mockResolvedValue(mockServices)
 
     renderWithProviders(<ServiceListPage />)
 
@@ -80,7 +89,7 @@ describe('ServiceListPage', () => {
   })
 
   it('shows an error state when the API fails', async () => {
-    vi.mocked(servicesApiModule.servicesApi.getServices).mockRejectedValue({
+    vi.mocked(client.getServices).mockRejectedValue({
       status: 500,
       code: 'SERVER_ERROR',
       message: 'Something went wrong while loading services.',
@@ -94,7 +103,7 @@ describe('ServiceListPage', () => {
   })
 
   it('shows an empty state when no services are returned', async () => {
-    vi.mocked(servicesApiModule.servicesApi.getServices).mockResolvedValue([])
+    vi.mocked(client.getServices).mockResolvedValue([])
 
     renderWithProviders(<ServiceListPage />)
 
@@ -104,7 +113,7 @@ describe('ServiceListPage', () => {
   })
 
   it('filters services by search term', async () => {
-    vi.mocked(servicesApiModule.servicesApi.getServices)
+    vi.mocked(client.getServices)
       .mockResolvedValueOnce(mockServices)
       .mockResolvedValue([mockServices[0]])
 
@@ -116,7 +125,7 @@ describe('ServiceListPage', () => {
     await userEvent.type(searchInput, 'cleaning')
 
     await waitFor(() => {
-      expect(servicesApiModule.servicesApi.getServices).toHaveBeenCalledWith(
+      expect(client.getServices).toHaveBeenCalledWith(
         expect.objectContaining({ search: 'cleaning' }),
       )
     })

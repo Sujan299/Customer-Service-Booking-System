@@ -6,10 +6,19 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { ServiceDetailPage } from '../ServiceDetailPage'
 import { apiSlice } from '../../../store/apiSlice'
 import notificationsReducer from '../../../store/notificationsSlice'
-import * as servicesApiModule from '../../../api/services/servicesApi'
+import { client } from '../../../api/client'
 import type { Service } from '../../../types'
 
-vi.mock('../../../api/services/servicesApi')
+vi.mock('../../../api/client', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../../api/client')>()
+  return {
+    ...actual,
+    client: {
+      ...actual.client,
+      getServiceById: vi.fn(),
+    },
+  }
+})
 
 const mockService: Service = {
   id: 's1',
@@ -54,13 +63,13 @@ describe('ServiceDetailPage', () => {
   })
 
   it('renders service information correctly', async () => {
-    vi.mocked(servicesApiModule.servicesApi.getServiceById).mockResolvedValue(mockService)
+    vi.mocked(client.getServiceById).mockResolvedValue(mockService)
 
     renderWithProviders('s1')
 
     await waitFor(() => {
       expect(screen.getByText('Home Cleaning')).toBeInTheDocument()
-      expect(screen.getByText('CleanPro Services')).toBeInTheDocument()
+      expect(screen.getAllByText('CleanPro Services')[0]).toBeInTheDocument()
       expect(screen.getByText('Professional deep cleaning for your home.')).toBeInTheDocument()
       expect(screen.getByText('NPR 1,500')).toBeInTheDocument()
       expect(screen.getByRole('link', { name: /book now/i })).toBeInTheDocument()
@@ -68,7 +77,7 @@ describe('ServiceDetailPage', () => {
   })
 
   it('shows a not-found message for unknown service IDs', async () => {
-    vi.mocked(servicesApiModule.servicesApi.getServiceById).mockRejectedValue({
+    vi.mocked(client.getServiceById).mockRejectedValue({
       status: 404,
       code: 'NOT_FOUND',
       message: 'Service not found.',
@@ -82,7 +91,7 @@ describe('ServiceDetailPage', () => {
   })
 
   it('shows a generic error state on server errors', async () => {
-    vi.mocked(servicesApiModule.servicesApi.getServiceById).mockRejectedValue({
+    vi.mocked(client.getServiceById).mockRejectedValue({
       status: 500,
       code: 'SERVER_ERROR',
       message: 'Something went wrong while loading the service.',
