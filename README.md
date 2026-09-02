@@ -2,7 +2,7 @@
 
 A frontend-only Customer Service Booking System built as a technical assignment.
 
-**Demo:** `<<< ADD DEMO VIDEO LINK >>>`
+**Demo:** `https://jam.dev/c/9a5ca193-e01b-49e3-91b7-121a0433717e`
 **Repository:** `https://github.com/Sujan299/Customer-Service-Booking-System`
 **Author:** `Sujan Chaudhary`
 
