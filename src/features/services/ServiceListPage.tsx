@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { servicesApi } from '../../api/services/servicesApi'
+import { useGetServicesQuery } from '../../store/apiSlice'
 import { ServiceCard } from '../../components/ServiceCard'
 import { ServiceFilters } from '../../components/ServiceFilters'
 import { LoadingState } from '../../components/LoadingState'
@@ -12,10 +11,7 @@ export function ServiceListPage() {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('')
 
-  const { data: services, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ['services', { search, category }],
-    queryFn: () => servicesApi.getServices({ search, category }),
-  })
+  const { data: services, isLoading, isError, error, refetch } = useGetServicesQuery({ search, category })
 
   const apiError = error as ApiError | null
 
