@@ -21,6 +21,7 @@ const defaultDraft: BookingDraft = {
   notes: '',
 }
 
+// keep booking form draft in Zustand so user selections survive page navigation without hitting server
 export const useBookingDraftStore = create<BookingDraftStore>((set) => ({
   ...defaultDraft,
 

@@ -36,7 +36,7 @@ export function BookingPage() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
-  // Zustand — booking draft persists across navigation so selections aren't lost
+  // zustand — booking draft persists across navigation so selections aren't gone
   const draft = useBookingDraftStore()
 
   const {
@@ -55,6 +55,7 @@ export function BookingPage() {
       notes: draft.notes,
     },
   })
+  // persist form state to draft store on unmount so selections aren't lost if user navigate
   useEffect(() => {
     return () => {
       const current = getValues()
@@ -63,7 +64,7 @@ export function BookingPage() {
       draft.setField('addressId', current.addressId)
       draft.setField('notes', current.notes ?? '')
     }
-  }, []) 
+  }, [])
 
   const watchedDate = watch('date')
   const watchedSlot = watch('timeSlotId')
@@ -76,7 +77,7 @@ export function BookingPage() {
 
   useEffect(() => {
     if (serviceId) draft.setServiceId(serviceId)
-  }, [serviceId]) 
+  }, [serviceId])
 
   const { data: addressList = [] } = useGetAddressesQuery()
 
@@ -113,7 +114,7 @@ export function BookingPage() {
       })
       .catch((err: ApiError) => {
         if (err.code === 'SLOT_UNAVAILABLE') {
-          // Clear the stale slot selection from form and draft
+          // clear the stale slot selection from form 
           setValue('timeSlotId', '', { shouldValidate: false })
           draft.setField('timeSlotId', '')
           refetchAvailability()
@@ -172,9 +173,7 @@ export function BookingPage() {
       <h1 className="text-xl font-semibold text-gray-900 mb-6">Book a Service</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-        {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="md:col-span-3 space-y-6">
-          {/* Date */}
           <div>
             <label htmlFor="booking-date" className="block text-sm font-medium text-gray-700 mb-1.5">
               Select Date
@@ -191,7 +190,6 @@ export function BookingPage() {
             )}
           </div>
 
-          {/* Time slots */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
               Select Time Slot
@@ -212,7 +210,6 @@ export function BookingPage() {
             )}
           </div>
 
-          {/* Address */}
           <div>
             <label htmlFor="booking-address" className="block text-sm font-medium text-gray-700 mb-1.5">
               Service Address
@@ -234,7 +231,6 @@ export function BookingPage() {
             )}
           </div>
 
-          {/* Notes */}
           <div>
             <label htmlFor="booking-notes" className="block text-sm font-medium text-gray-700 mb-1.5">
               Notes <span className="text-gray-400 font-normal">(optional)</span>
@@ -257,7 +253,6 @@ export function BookingPage() {
           </button>
         </form>
 
-        {/* Summary sidebar */}
         <div className="md:col-span-2">
           <p className="text-sm font-medium text-gray-700 mb-2">Booking Summary</p>
           <BookingSummary

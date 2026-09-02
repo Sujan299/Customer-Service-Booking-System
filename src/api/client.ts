@@ -1,6 +1,8 @@
 import type { ApiError } from '../types'
 import * as mockApi from './mock/mockApi'
 
+// narrows unknown catch values to ApiError so callers can safely read .status and .code.
+
 function isApiError(err: unknown): err is ApiError {
   return (
     typeof err === 'object' &&
@@ -25,6 +27,8 @@ export async function apiCall<T>(fn: () => Promise<T>): Promise<T> {
     } satisfies ApiError
   }
 }
+
+// single swap point , replace mockApi with a real http module here and nothing else needs to change.
 
 export const client = {
   getServices: mockApi.getServices,

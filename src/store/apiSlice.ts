@@ -2,6 +2,7 @@ import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
 import { apiCall, client } from '../api/client'
 import type { Service, Availability, Booking, Address, ServiceFilters, CreateBookingRequest } from '../types'
 
+// fakeBaseQuery lets us wrap our async client functions while keeping RTK Query
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fakeBaseQuery(),
@@ -10,7 +11,7 @@ export const apiSlice = createApi({
     getServices: builder.query<Service[], ServiceFilters | void>({
       queryFn: async (filters) => {
         try {
-          const data = await apiCall(() => client.getServices(filters ?? undefined))
+          const data = await apiCall(() => client.getServices(filters ? filters : undefined))
           return { data }
         } catch (error) {
           return { error }

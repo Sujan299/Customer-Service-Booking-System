@@ -29,6 +29,7 @@ export function BookingConfirmationPage() {
     )
   }
 
+  // append T00:00:00 to parse as local time 
   const formattedDate = new Date(booking.date + 'T00:00:00').toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',

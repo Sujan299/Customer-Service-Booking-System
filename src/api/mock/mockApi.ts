@@ -123,6 +123,7 @@ export async function createBooking(request: CreateBookingRequest): Promise<Book
 
   const isSlotTaken = !timeSlot.available || booked.has(request.timeSlotId)
 
+  // Throw 409 conflict if another user booked the slot concurrently
   if (isSlotTaken || mockConfig.simulateSlotConflict) {
     if (mockConfig.simulateSlotConflict) {
       mockConfig.simulateSlotConflict = false
