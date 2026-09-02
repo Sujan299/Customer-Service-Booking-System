@@ -6,6 +6,8 @@ import {Provider} from 'react-redux'
 import { store } from './store'
 import { BookingPage } from './features/booking/BookingPage'
 import { BookingConfirmationPage } from './features/booking/BookingConfirmationPage'
+import { BookingsPage } from './features/bookings/BookingsPage'
+import { BookingDetailPage } from './features/bookings/BookingDetailPage'
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
               <Route path="/services" element={<ServiceListPage />} />
               <Route path="/services/:serviceId/book" element={<BookingPage />} />
               <Route path="/booking-confirmation/:bookingId" element={<BookingConfirmationPage />} />
+              <Route path="/bookings" element={<BookingsPage />} />
+              <Route path="/bookings/:bookingId" element={<BookingDetailPage />} />
             </Routes>
           </main>
           </div>
