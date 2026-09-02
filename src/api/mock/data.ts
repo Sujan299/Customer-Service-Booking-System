@@ -1,0 +1,196 @@
+import type { Service, Provider, Address, Booking, TimeSlot } from '../../types'
+
+export const providers: Provider[] = [
+  { id: 'p1', name: 'CleanPro Services', phone: '9841000001' },
+  { id: 'p2', name: 'FixIt Nepal', phone: '9841000002' },
+  { id: 'p3', name: 'HomeCare Experts', phone: '9841000003' },
+  { id: 'p4', name: 'TechFix Solutions', phone: '9841000004' },
+]
+
+export const services: Service[] = [
+  {
+    id: 's1',
+    name: 'Home Cleaning',
+    category: 'Cleaning',
+    description:
+      'Professional deep cleaning for your home. Includes dusting, mopping, bathroom sanitation, and kitchen cleaning. Our team brings all equipment and eco-friendly supplies.',
+    providerId: 'p1',
+    provider: providers[0],
+    price: 1500,
+    currency: 'NPR',
+    durationMinutes: 180,
+    rating: 4.7,
+    reviewCount: 214,
+    available: true,
+  },
+  {
+    id: 's2',
+    name: 'Plumbing Repair',
+    category: 'Plumbing',
+    description:
+      'Leak fixes, pipe replacements, tap and faucet repairs, and drainage unblocking. All work guaranteed for 30 days.',
+    providerId: 'p2',
+    provider: providers[1],
+    price: 800,
+    currency: 'NPR',
+    durationMinutes: 60,
+    rating: 4.5,
+    reviewCount: 98,
+    available: true,
+  },
+  {
+    id: 's3',
+    name: 'AC Service & Cleaning',
+    category: 'Appliance',
+    description:
+      'Full AC service including filter cleaning, gas top-up check, coil wash, and performance testing. Keeps your unit running efficiently.',
+    providerId: 'p3',
+    provider: providers[2],
+    price: 1200,
+    currency: 'NPR',
+    durationMinutes: 90,
+    rating: 4.6,
+    reviewCount: 176,
+    available: true,
+  },
+  {
+    id: 's4',
+    name: 'Electrician',
+    category: 'Electrical',
+    description:
+      'Wiring, switchboard installation, fan/light fitting, and fault diagnosis. Licensed electrician with safety certification.',
+    providerId: 'p2',
+    provider: providers[1],
+    price: 600,
+    currency: 'NPR',
+    durationMinutes: 60,
+    rating: 4.4,
+    reviewCount: 132,
+    available: true,
+  },
+  {
+    id: 's5',
+    name: 'Beauty at Home',
+    category: 'Beauty',
+    description:
+      'Professional beauty services at your doorstep. Includes facial, threading, waxing, and makeup. Hygienic kits used for every client.',
+    providerId: 'p3',
+    provider: providers[2],
+    price: 2000,
+    currency: 'NPR',
+    durationMinutes: 120,
+    rating: 4.8,
+    reviewCount: 302,
+    available: true,
+  },
+  {
+    id: 's6',
+    name: 'Appliance Repair',
+    category: 'Appliance',
+    description:
+      'Washing machine, refrigerator, microwave, and dishwasher diagnosis and repair. Spare parts sourced from certified suppliers.',
+    providerId: 'p4',
+    provider: providers[3],
+    price: 900,
+    currency: 'NPR',
+    durationMinutes: 90,
+    rating: 4.3,
+    reviewCount: 87,
+    available: true,
+  },
+  {
+    id: 's7',
+    name: 'Pest Control',
+    category: 'Cleaning',
+    description:
+      'Comprehensive pest treatment for cockroaches, rodents, bed bugs, and termites. Safe for children and pets after 4 hours.',
+    providerId: 'p1',
+    provider: providers[0],
+    price: 2500,
+    currency: 'NPR',
+    durationMinutes: 120,
+    rating: 4.5,
+    reviewCount: 63,
+    available: true,
+  },
+  {
+    id: 's8',
+    name: 'Water Tank Cleaning',
+    category: 'Cleaning',
+    description:
+      'Manual and jet-wash cleaning of overhead and underground water tanks. Disinfection included. Certificate provided.',
+    providerId: 'p1',
+    provider: providers[0],
+    price: 1800,
+    currency: 'NPR',
+    durationMinutes: 150,
+    rating: 4.6,
+    reviewCount: 45,
+    available: false,
+  },
+]
+
+export const addresses: Address[] = [
+  {
+    id: 'a1',
+    label: 'Home',
+    line1: 'House 12, Lane 5, Bafal',
+    city: 'Kathmandu',
+    district: 'Kathmandu',
+  },
+  {
+    id: 'a2',
+    label: 'Office',
+    line1: 'Floor 3, Sunrise Tower, New Baneshwor',
+    city: 'Kathmandu',
+    district: 'Kathmandu',
+  },
+  {
+    id: 'a3',
+    label: 'Parents Home',
+    line1: 'Ward 4, Pulchowk',
+    city: 'Lalitpur',
+    district: 'Lalitpur',
+  },
+]
+
+export const baseSlots: TimeSlot[] = [
+  { id: 'slot-1', time: '09:00 AM', available: true },
+  { id: 'slot-2', time: '10:00 AM', available: true },
+  { id: 'slot-3', time: '11:00 AM', available: false },
+  { id: 'slot-4', time: '12:00 PM', available: true },
+  { id: 'slot-5', time: '02:00 PM', available: true },
+  { id: 'slot-6', time: '03:00 PM', available: false },
+  { id: 'slot-7', time: '04:00 PM', available: true },
+  { id: 'slot-8', time: '05:00 PM', available: true },
+]
+
+// Pre-seeded bookings shown in "My Bookings" on first load
+export const seedBookings: Booking[] = [
+  {
+    id: 'b1',
+    bookingNumber: 'BK-001',
+    serviceId: 's1',
+    service: services[0],
+    providerId: 'p1',
+    provider: providers[0],
+    date: '2026-08-25',
+    timeSlot: { id: 'slot-2', time: '10:00 AM', available: false },
+    address: addresses[0],
+    status: 'completed',
+    createdAt: '2026-08-20T10:00:00.000Z',
+  },
+  {
+    id: 'b2',
+    bookingNumber: 'BK-002',
+    serviceId: 's4',
+    service: services[3],
+    providerId: 'p2',
+    provider: providers[1],
+    date: '2026-09-05',
+    timeSlot: { id: 'slot-4', time: '12:00 PM', available: false },
+    address: addresses[1],
+    status: 'confirmed',
+    createdAt: '2026-08-28T14:30:00.000Z',
+  },
+]
